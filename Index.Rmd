@@ -1,0 +1,39 @@
+---
+title: "Diversity indexes"
+author: "Erick Nasareth"
+date: "2025-04-03"
+output: pdf_document
+---
+
+Loading packages
+
+```{r}
+library(pacman)
+pacman::p_load(tidyverse, vegan, iNEXT, nlme, readxl)
+```
+
+Loading Data
+```{r}
+df <- readxl::read_excel("uniao.xlsx")
+```
+
+
+Getting only the necessary variables
+
+```{r}
+df <- df[, c("Kingdom", "Phylum", "Diabasadden", "Longyearbyen")]
+```
+
+
+teste
+```{r}
+
+```
+
+
+
+
+
+
+
+
