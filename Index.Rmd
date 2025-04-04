@@ -9,10 +9,12 @@ Loading packages
 
 ```{r}
 library(pacman)
-pacman::p_load(tidyverse, vegan, iNEXT, nlme, readxl)
+pacman::p_load(tidyverse, vegan, iNEXT, nlme, readxl, writexl)
 ```
 
+
 Loading Data
+
 ```{r}
 df <- readxl::read_excel("uniao.xlsx")
 ```
@@ -22,17 +24,103 @@ Getting only the necessary variables
 
 ```{r}
 df <- df[, c("Kingdom", "Phylum", "Diabasadden", "Longyearbyen")]
+df <- df %>%
+  filter(Kingdom != "Unknown")
 ```
 
 
-teste
+Creating the results data frame
+
+```{r}
+index <- data.frame(
+  Kingdom = character(0),
+  Phylum = character(0),
+  Local = character(0),
+  Margalef = numeric(0),
+  Shannon = numeric(0),
+  Simpson = numeric(0),
+  Evenness = numeric(0),
+  Falpha = numeric(0)
+)
+```
+
+
+getting all indices in automatized way
+
 ```{r}
 
+
+for(i in unique(df$Kingdom)){
+  filo <- df %>%
+    filter(Kingdom == i)
+  
+  for(j in unique(filo$Phylum)){
+    species <- filo %>%
+      filter(Phylum == j)
+    
+    #matrix treatment
+    
+    dados <- t(species[, c("Diabasadden", "Longyearbyen")])
+    matriz_dados <- data.matrix(dados)
+    
+    #margalef
+    riqueza <- specnumber(matriz_dados)
+    abundancia <- apply(matriz_dados, 1, sum)
+    Margalef <- round( (riqueza - 1) / log(abundancia) , 2)
+    
+    #shannon
+    shannon <- diversity(matriz_dados, index="shannon", MARGIN = 1)
+    if(length(shannon) < 2){
+      shannon[[2]] <- NA
+    }
+    
+    #simpson
+    simpson = diversity(matriz_dados, index="simpson", MARGIN = 1)
+    if(length(simpson) < 2){
+      simpson[[2]] <- NA
+    }
+    
+    #evenness
+    J <- (diversity(matriz_dados)) / (log(specnumber(matriz_dados)))
+    
+    #fisher's Alpha
+    alpha <- fisher.alpha(matriz_dados)
+    if(length(alpha) < 2){
+      alpha[[2]] <- NA
+    }
+    
+    index <- rbind(index, data.frame(
+      Kingdom = i,
+      Phylum = j,
+      Local = names(Margalef)[1],
+      Margalef = Margalef[[1]],
+      Shannon = shannon[[1]],
+      Simpson = simpson[[1]],
+      Evenness = J[[1]],
+      Falpha = alpha[[1]]
+    ))
+    
+    index <- rbind(index, data.frame(
+      Kingdom = i,
+      Phylum = j,
+      Local = names(Margalef)[[2]],
+      Margalef = Margalef[[2]],
+      Shannon = shannon[[2]],
+      Simpson = simpson[[2]],
+      Evenness = J[[2]],
+      Falpha = alpha[[2]]
+    ))
+  }
+  
+}
 ```
 
 
+writing an excel file
 
-
+```{r}
+write_xlsx(index, "indices.xlsx")
+```
 
 
 
