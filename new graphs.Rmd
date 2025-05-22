@@ -6,25 +6,119 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+library(pacman)
+pacman::p_load(tidyverse, readxl, ggrepel)
+
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Chromista
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+chromista <- data.frame(
+  Filo = rep(c("Bigyra", "Cercozoa", "Ciliophora", "Ochrophyta", "Oomycota"), 2),
+  Place = rep(c("Diabasodden", "Longyearbyen"), each = 5),
+  Soma = c(5763, 15, 21802, 46905, 7117, 1146, 20, 15592, 24555, 6712),
+  Especies = c(2, 3, 24, 25, 15, 3, 2, 29, 20, 23)
 
-```{r cars}
-summary(cars)
+)
+
+chromista
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+chromista %>%
+  ggplot(aes(color = Place)) +
+  geom_point(aes(x = Especies, y = Soma)) + 
+  geom_text_repel(aes(x = Especies, y = Soma, label = Filo), size = 3) +
+  labs(label = c("Diabasodden", "Longyearbyen"), y = "Number of reads", x = "Number of ASVs")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Metazoa
+
+```{r}
+metazoa <- data.frame(
+  Filo = rep(c("Annelida", "Chordata", "Cnidaria", "Gastrotricha", "Nematoda", 
+           "Onychophora", "Placozoa", "Platyhelminthe", "Porifera", "Rotifera",
+           "Arthropoda", "Mollusca", "Tardigrada"), 2),
+  Place = rep(c("Diabasodden", "Longyearbyen"), each = 13),
+  Soma = c(79, 383, 41, 361, 135, 0, 83, 41, 276, 74, 24476, 1094, 26684, 0, 65, 775, 451, 265, 22, 242, 119, 87, 362, 149962, 10803, 34855),
+  Especies = c(2, 3, 6, 3, 2, 0, 1, 1, 3, 1, 21, 13, 2, 0, 1, 9, 3, 3, 1, 1, 3, 1, 3, 47, 20, 1)
+)
+
+# Visualização do dataframe
+metazoa
+```
+
+
+```{r}
+metazoa %>%
+  ggplot(aes(color = Place)) +
+  geom_point(aes(x = Especies, y = Soma)) + 
+  geom_text_repel(aes(x = Especies, y = Soma, label = Filo), size = 3, max.overlaps = 18) +
+  scale_y_log10() +
+  labs(label = c("Diabasodden", "Longyearbyen"), y = "Number of reads", x = "Number of ASVs")
+```
+
+
+# Fungi
+
+```{r}
+fungi <- data.frame(
+  Filo = rep(c("Aphelidiomycota", "Ascomycota", "Basidiomycota", "Blastocladiomycota",
+           "Chytridiomycota", "Mortierellomycota", "Mucromycota", "Rozellomycota"), 2),
+  Place = rep(c("Diabasodden", "Longyearbyen"), each = 7),
+  Soma = c(0, 41549, 8538, 58, 316, 191, 0, 172, 400, 27509, 67749, 12, 1274, 719, 50, 280),
+  Especies = c(0, 89, 19, 1, 5, 4, 0, 2, 1, 90, 39, 1, 5, 4, 2, 4 )
+)
+
+# Visualização do dataframe
+fungi
+```
+
+```{r}
+fungi %>%
+  ggplot(aes(color = Place)) +
+  geom_point(aes(x = Especies, y = Soma)) + 
+  geom_text_repel(aes(x = Especies, y = Soma, label = Filo), size = 3, max.overlaps = 18) +
+  labs(label = c("Diabasodden", "Longyearbyen"), x = "Number of reads", y = "Number of ASVs")
+```
+
+# Protista
+
+```{r}
+protista <- data.frame(
+  Filo = c("Amebozoa", "Loukozoa"),
+  L = c(3, 1),
+  Longyearbyen = c(7768, 0),
+  D = c(8, 0),
+  Diabasodden = c(2523, 196)
+)
+
+# Visualização do dataframe
+protista
+```
+
+
+# Viridiplantae
+
+```{r}
+viridiplantae <- data.frame(
+  Filo = c("Charophyta", "Chlorophyta", "Rhodophyta"),
+  D = c(1, 31, 5),
+  Diabasodden = c(35, 4949, 445),
+  L = c(0, 15, 9),
+  Longyearbyen = c(0, 1255, 1717)
+)
+
+# Visualização do dataframe
+viridiplantae
+```
+
+
+
+
+Place = rep(c("Diabasodden", "Longyearbyen"), each = 5),
+  Soma = c(),
+  Especies = c()
