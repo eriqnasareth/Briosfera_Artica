@@ -1,0 +1,77 @@
+---
+title: "last updates"
+author: "Erick Nasareth"
+date: "2025-06-23"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(pacman)
+pacman::p_load(tidyverse, readxl, writexl)
+```
+
+
+```{r}
+df <- data.frame(
+  Kingdom = rep(c("Chromista", "Protista", "Metazoa", "Viridiplantae"), 2),
+  Reads = c(2467, 293, 47301, 86, 6487, 12, 154837, 886),
+  From = rep(c("Diabasodden", "Longyearbyen"), each = 4)
+)
+```
+
+
+```{r}
+df %>%
+  ggplot(aes(x = Kingdom, y = Reads, fill = From)) +
+  geom_col(position = "dodge") +
+  theme_bw() +
+  ggplot2::theme(
+    axis.title.y = ggplot2::element_text(colour = "black", size = 10),
+    axis.title.x = ggplot2::element_text(colour = "black", size = 10),
+    axis.text = ggplot2::element_text(colour = "black", size = 10),
+    panel.border = ggplot2::element_blank(),
+    axis.line = ggplot2::element_line(colour = "black"),
+    text = element_text(family = "sans", size = 12),
+    legend.position = "top"
+  ) +
+   geom_text(aes(label = Reads), 
+            position = position_dodge(width = 0.9), vjust = -0.5, size = 3, color = "black")+
+  scale_fill_manual(values = c("#AFCDF6", "#114A8C")) + 
+  labs(fill = "")
+
+ggsave("Invasores.png", width = 158, height = 100, units = "mm")
+```
+
+
+
+```{r}
+df1 <- data.frame(
+  Kingdom = rep(c("Chromista", "Protista", "Metazoa", "Viridiplantae"), 2),
+  ASVs = c(7, 1, 25, 3, 10, 1, 39, 6),
+  From = rep(c("Diabasodden", "Longyearbyen"), each = 4)
+)
+```
+
+
+```{r}
+df1 %>%
+  ggplot(aes(x = Kingdom, y = ASVs, fill = From)) +
+  geom_col(position = "dodge") +
+  theme_bw() +
+  ggplot2::theme(
+    axis.title.y = ggplot2::element_text(colour = "black", size = 10),
+    axis.title.x = ggplot2::element_text(colour = "black", size = 10),
+    axis.text = ggplot2::element_text(colour = "black", size = 10),
+    panel.border = ggplot2::element_blank(),
+    axis.line = ggplot2::element_line(colour = "black"),
+    text = element_text(family = "sans", size = 12),
+    legend.position = "top"
+  ) +
+   geom_text(aes(label = ASVs), 
+            position = position_dodge(width = 0.9), vjust = -0.5, size = 3, color = "black")+
+  scale_fill_manual(values = c("#AFCDF6", "#114A8C")) + 
+  labs(fill = "")
+
+ggsave("asv.png", width = 158, height = 100, units = "mm")
+```
+

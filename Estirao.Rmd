@@ -1,0 +1,46 @@
+---
+title: "Estirao"
+author: "Erick Nasareth"
+date: "2025-07-01"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(pacman)
+pacman::p_load(tidyverse, readxl, writexl)
+```
+
+
+
+```{r}
+estirao <- read_xlsx("Estirao2.xlsx")
+```
+
+```{r}
+# col de soma
+
+estirao <- estirao %>%
+  mutate(
+    soma = `E1-ITS` + `E2-ITS` + `E3-ITS` + `E4-ITS` + `E5-ITS` + `E6-ITS`
+  )
+  
+
+```
+
+
+```{r}
+estirao <- estirao %>%
+  filter(soma > 0)
+```
+
+
+```{r}
+estirao %>%
+  select(-soma)
+```
+
+
+```{r}
+write_xlsx(estirao, "Estirao2.att.xlsx")
+```
+
