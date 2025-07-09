@@ -1,0 +1,149 @@
+---
+title: "mapas"
+author: "Erick Nasareth"
+date: "2025-07-03"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(pacman)
+p_load(leaflet, geosphere, mapview, rnaturalearthdata, sf)
+
+```
+
+```{r}
+# Criar um dataframe com dois pontos (exemplo: São Paulo e Rio de Janeiro)
+pontos <- data.frame(
+  local = c("Longyearbyen", "Diabasodden"),
+  lat = c(78.216667, 78.3611),
+  lng = c(15.633333, 16.1089)
+)
+```
+
+```{r}
+# Calcular a distância entre os pontos (em metros)
+distancia <- distGeo(
+  c(pontos$lng[1], pontos$lat[1]),
+  c(pontos$lng[2], pontos$lat[2])
+)
+
+```
+
+
+```{r}
+# Converter para quilômetros
+distancia_km <- round(distancia / 1000, 2)
+```
+
+
+# Mapa 1
+
+```{r}
+# Criar o mapa
+mapa <- leaflet() %>%
+  addTiles() %>%  # Adicionar mapa base do OpenStreetMap
+  setView(0, 70, zoom = 3) %>%
+  addMarkers(
+    data = pontos,
+    lng = ~lng,
+    lat = ~lat,
+    popup = ~local
+  ) %>%
+  addPolylines(
+    data = pontos,
+    lng = ~lng,
+    lat = ~lat,
+    color = "red",
+    weight = 3
+  ) %>%
+  addControl(
+    html = paste0("<b>Distância:</b> ", distancia_km, " km"),
+    position = "topright"
+  )
+
+mapa
+```
+
+
+
+
+```{r}
+mapshot(mapa, file = "mapas/mundi.png")
+```
+
+# Mapa 2
+
+```{r}
+# Criar o mapa
+mapa <- leaflet() %>%
+  addTiles() %>%  # Adicionar mapa base do OpenStreetMap
+  setView(18.8747, 78.9653, zoom = 5) %>%
+  addMarkers(
+    data = pontos,
+    lng = ~lng,
+    lat = ~lat,
+    popup = ~local
+  ) %>%
+  addPolylines(
+    data = pontos,
+    lng = ~lng,
+    lat = ~lat,
+    color = "red",
+    weight = 3
+  ) %>%
+  addControl(
+    html = paste0("<b>Distância:</b> ", distancia_km, " km"),
+    position = "topright"
+  )
+
+mapa
+```
+
+
+
+
+```{r}
+mapshot(mapa, file = "mapas/arquipelago.png")
+```
+
+
+# Mapa 3
+
+```{r}
+# Criar o mapa
+mapa <- leaflet() %>%
+  addTiles() %>%  # Adicionar mapa base do OpenStreetMap
+  addProviderTiles(
+    providers$Esri.WorldImagery,
+    options = providerTileOptions(opacity = 0.5)
+  ) %>%
+  setView(15.9, 78.28, zoom = 10) %>%
+  addMarkers(
+    data = pontos,
+    lng = ~lng,
+    lat = ~lat,
+    popup = ~local
+  ) %>%
+  addPolylines(
+    data = pontos,
+    lng = ~lng,
+    lat = ~lat,
+    color = "red",
+    weight = 3
+  ) %>%
+  addControl(
+    html = paste0("<b>Distância:</b> ", distancia_km, " km"),
+    position = "topright"
+  )
+
+mapa
+```
+
+
+```{r}
+mapshot(mapa, file = "mapas/close.png")
+```
